@@ -1,31 +1,36 @@
 using UnityEngine;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class ItemCollector : MonoBehaviour
 {
-    private Item currentItem;
-    public Transform itemHoldPoint;
+    private Item _currentItem;
+    [SerializeField] private Transform _itemHoldPoint;
+    private GameObject _user;
+
+    private void Awake()
+    {
+        _user = gameObject;
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        if (currentItem != null) return;
+        if (_currentItem != null) return;
 
         Item item = other.GetComponent<Item>();
         if (item != null)
         {
-            currentItem = item;
-            item.transform.SetParent(itemHoldPoint);
+            _currentItem = item;
+
+            item.transform.SetParent(_itemHoldPoint);
             item.transform.localPosition = Vector3.zero;
+            item.transform.localRotation = Quaternion.identity;
+
             Debug.Log("Ты подобрал предмет.");
         }
 
-        if (currentItem is ProjectileItem projectileItem)
+        if (_currentItem != null)
         {
-            projectileItem.SetShootPoint(itemHoldPoint);
-        }
-
-        if (currentItem != null)
-        {
-            Rotator rotator = currentItem.GetComponentInChildren<Rotator>();
+            Rotator rotator = _currentItem.GetComponentInChildren<Rotator>();
 
             if (rotator != null)
             {
@@ -34,15 +39,15 @@ public class ItemCollector : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (currentItem != null)
+            if (_currentItem != null)
             {
                 Debug.Log("Ты использовал предмет.");
-                currentItem.Use(GetComponent<Player>());
-                currentItem = null;
+                _currentItem.Use(_user);
+                _currentItem = null;
             }
             else
             {

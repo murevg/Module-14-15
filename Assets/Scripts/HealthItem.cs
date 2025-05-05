@@ -4,9 +4,14 @@ public class HealthItem : Item
 {
     [SerializeField] private int healthIncrease = 20;
 
-    public override void Use(Player player)
+    public override void Use(GameObject user)
     {
-        player.IncreaseHealth(healthIncrease);
-        Destroy(gameObject);
+        Player player = user.GetComponent<Player>();
+
+        if (player != null)
+        {
+            player.IncreaseHealth(healthIncrease);
+            Destroy(gameObject);
+        }
     }
 }

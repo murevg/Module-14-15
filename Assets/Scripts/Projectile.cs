@@ -18,6 +18,12 @@ public class Projectile : MonoBehaviour
         }
     }
 
+    public void Launch(Vector3 direction, float speed)
+    {
+        Rigidbody rigidBody = GetComponent<Rigidbody>();
+        rigidBody.velocity = direction * speed;
+    }
+
     private void Explode()
     {
         if (_explosionParticlesPrefab != null)
